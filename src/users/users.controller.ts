@@ -17,6 +17,11 @@ export class UsersController {
     return this.authService.signup(user.email, user.password);
   }
 
+  @Post("/signin")
+  signIn(@Body() user : CreateUserDto) {
+    return this.authService.signin(user.email, user.password);
+  }
+
   // Says use SerializeInterceptor middleware/interceptor for this endpoint
   // We pass the Dto we need to be returned as the body
   // @UseInterceptors(new SerializeInterceptor(UserDto))
