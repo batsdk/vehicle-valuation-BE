@@ -11,6 +11,11 @@ import { AuthService } from './auth.service';
 export class UsersController {
   constructor(private service: UsersService, private authService : AuthService) {}
 
+  @Post('/signout')
+  signOut(@Session() session: any){
+    session.userId = null;
+  }
+
   @Post('/signup')
   async createUser(@Body() user: CreateUserDto, @Session() session :any) {
     const savedUser = await this.authService.signup(user.email, user.password);
