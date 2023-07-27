@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Patch,Param,Query, Delete,NotFoundException } from '@nestjs/common';
+import { Body, Controller, Post, Get, Patch,Param,Query, Delete,NotFoundException, Session } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
@@ -6,20 +6,23 @@ import { UserDto } from './dtos/userDto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { AuthService } from './auth.service';
 
-
 @Controller('auth')
 @Serialize(UserDto) // Serialization for the entire controller
 export class UsersController {
   constructor(private service: UsersService, private authService : AuthService) {}
 
   @Post('/signup')
-  createUser(@Body() user: CreateUserDto) {
-    return this.authService.signup(user.email, user.password);
+  async createUser(@Body() user: CreateUserDto, @Session() session :any) {
+    const savedUser = await this.authService.signup(user.email, user.password);
+    session.userId = savedUser.id;
+    return savedUser;
   }
 
   @Post("/signin")
-  signIn(@Body() user : CreateUserDto) {
-    return this.authService.signin(user.email, user.password);
+  async signIn(@Body() user : CreateUserDto, @Session() session :any) {
+    const savedUser = await this.authService.signin(user.email, user.password);
+    session.userId = savedUser.id;
+    return savedUser;
   }
 
   // Says use SerializeInterceptor middleware/interceptor for this endpoint
