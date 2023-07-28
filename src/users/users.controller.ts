@@ -1,10 +1,13 @@
-import { Body, Controller, Post, Get, Patch,Param,Query, Delete,NotFoundException, Session } from '@nestjs/common';
+import { Body, Controller, Post, Get, Patch,Param,Query, Delete,NotFoundException, Session, UseInterceptors } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/userDto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { AuthService } from './auth.service';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
+import { User } from './user.entity';
 
 @Controller('auth')
 @Serialize(UserDto) // Serialization for the entire controller
@@ -28,6 +31,12 @@ export class UsersController {
     const savedUser = await this.authService.signin(user.email, user.password);
     session.userId = savedUser.id;
     return savedUser;
+  }
+
+  @Get("checkuser")
+  @UseInterceptors(CurrentUserInterceptor)
+  checkCurrentUser(@CurrentUser() current: User){
+    return current;
   }
 
   // Says use SerializeInterceptor middleware/interceptor for this endpoint
