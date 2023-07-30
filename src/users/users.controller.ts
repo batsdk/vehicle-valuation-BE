@@ -33,8 +33,7 @@ export class UsersController {
     return savedUser;
   }
 
-  @Get("checkuser")
-  @UseInterceptors(CurrentUserInterceptor)
+  @Get("/checkuser")
   checkCurrentUser(@CurrentUser() current: User){
     return current;
   }
