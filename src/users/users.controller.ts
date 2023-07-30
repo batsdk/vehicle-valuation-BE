@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Patch,Param,Query, Delete,NotFoundException, Session, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Post, Get, Patch,Param,Query, Delete,NotFoundException, Session, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
@@ -6,8 +6,8 @@ import { UserDto } from './dtos/userDto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { AuthService } from './auth.service';
 import { CurrentUser } from './decorators/current-user.decorator';
-import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
 import { User } from './user.entity';
+import { AuthGuard } from 'src/gaurds/auth.guard';
 
 @Controller('auth')
 @Serialize(UserDto) // Serialization for the entire controller
@@ -33,6 +33,7 @@ export class UsersController {
     return savedUser;
   }
 
+  @UseGuards(AuthGuard)
   @Get("/checkuser")
   checkCurrentUser(@CurrentUser() current: User){
     return current;
