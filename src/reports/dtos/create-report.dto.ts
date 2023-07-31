@@ -10,6 +10,7 @@ import {
 export class CreateReportDto {
   @IsString()
   make: string;
+
   @IsString()
   model: string;
 

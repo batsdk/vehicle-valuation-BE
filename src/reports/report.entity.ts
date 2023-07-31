@@ -6,7 +6,7 @@ export class Report {
   id: number;
 
   @Column()
-  prince: number;
+  price: number;
 
   @Column()
   make: string;
