@@ -24,4 +24,7 @@ export class ReportDto {
   @Expose()
   userId: number;
 
+  @Expose()
+  approved: boolean;
+
 }
